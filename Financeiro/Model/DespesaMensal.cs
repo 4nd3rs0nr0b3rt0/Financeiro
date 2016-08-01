@@ -4,6 +4,7 @@ namespace Financeiro.Model
 {
     public class DespesaMensal
     {
+        public int DespesaMensalId { get; set; }
         public DateTime DataVencimento { get; set; }
         public string Descricao { get; set; }
         public decimal Valor { get; set; }

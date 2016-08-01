@@ -39,6 +39,7 @@
             this.txtDinheiro = new System.Windows.Forms.TextBox();
             this.dtDataLancamento = new System.Windows.Forms.DateTimePicker();
             this.tabDespesaMensal = new System.Windows.Forms.TabPage();
+            this.btnExcluir = new System.Windows.Forms.Button();
             this.dgvDespesaMensal = new System.Windows.Forms.DataGridView();
             this.lblTipoPagamento = new System.Windows.Forms.Label();
             this.lblTipoDespesa = new System.Windows.Forms.Label();
@@ -51,12 +52,20 @@
             this.txtValor = new System.Windows.Forms.TextBox();
             this.txtDescricao = new System.Windows.Forms.TextBox();
             this.dtDataVencimento = new System.Windows.Forms.DateTimePicker();
-            this.btnExcluir = new System.Windows.Forms.Button();
+            this.btnNovo = new System.Windows.Forms.Button();
+            this.tabRelatorioDespesa = new System.Windows.Forms.TabPage();
+            this.dgvRelatorioDespesa = new System.Windows.Forms.DataGridView();
+            this.dtDataInicio = new System.Windows.Forms.DateTimePicker();
+            this.dtDataFim = new System.Windows.Forms.DateTimePicker();
+            this.btnExibirRelatorioDespesa = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabRendaDiaria.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRendaDiaria)).BeginInit();
             this.tabDespesaMensal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDespesaMensal)).BeginInit();
+            this.tabRelatorioDespesa.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRelatorioDespesa)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -64,12 +73,14 @@
             this.tabControl.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.tabControl.Controls.Add(this.tabRendaDiaria);
             this.tabControl.Controls.Add(this.tabDespesaMensal);
+            this.tabControl.Controls.Add(this.tabRelatorioDespesa);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(784, 561);
             this.tabControl.TabIndex = 0;
+            this.tabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl_Selecting);
             // 
             // tabRendaDiaria
             // 
@@ -160,6 +171,7 @@
             // 
             // tabDespesaMensal
             // 
+            this.tabDespesaMensal.Controls.Add(this.btnNovo);
             this.tabDespesaMensal.Controls.Add(this.btnExcluir);
             this.tabDespesaMensal.Controls.Add(this.dgvDespesaMensal);
             this.tabDespesaMensal.Controls.Add(this.lblTipoPagamento);
@@ -181,13 +193,26 @@
             this.tabDespesaMensal.Text = "Despesa Mensal";
             this.tabDespesaMensal.UseVisualStyleBackColor = true;
             // 
+            // btnExcluir
+            // 
+            this.btnExcluir.Location = new System.Drawing.Point(638, 61);
+            this.btnExcluir.Name = "btnExcluir";
+            this.btnExcluir.Size = new System.Drawing.Size(130, 23);
+            this.btnExcluir.TabIndex = 21;
+            this.btnExcluir.Text = "Excluir";
+            this.btnExcluir.UseVisualStyleBackColor = true;
+            this.btnExcluir.Click += new System.EventHandler(this.btnExcluir_Click);
+            // 
             // dgvDespesaMensal
             // 
+            this.dgvDespesaMensal.AllowUserToAddRows = false;
             this.dgvDespesaMensal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDespesaMensal.Location = new System.Drawing.Point(8, 78);
+            this.dgvDespesaMensal.Location = new System.Drawing.Point(8, 90);
             this.dgvDespesaMensal.Name = "dgvDespesaMensal";
-            this.dgvDespesaMensal.Size = new System.Drawing.Size(760, 446);
+            this.dgvDespesaMensal.ReadOnly = true;
+            this.dgvDespesaMensal.Size = new System.Drawing.Size(760, 434);
             this.dgvDespesaMensal.TabIndex = 20;
+            this.dgvDespesaMensal.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDespesaMensal_CellClick);
             // 
             // lblTipoPagamento
             // 
@@ -232,7 +257,7 @@
             // 
             // btnLancarDespesa
             // 
-            this.btnLancarDespesa.Location = new System.Drawing.Point(638, 20);
+            this.btnLancarDespesa.Location = new System.Drawing.Point(638, 32);
             this.btnLancarDespesa.Name = "btnLancarDespesa";
             this.btnLancarDespesa.Size = new System.Drawing.Size(130, 23);
             this.btnLancarDespesa.TabIndex = 6;
@@ -291,15 +316,74 @@
             this.dtDataVencimento.Size = new System.Drawing.Size(100, 20);
             this.dtDataVencimento.TabIndex = 1;
             // 
-            // btnExcluir
+            // btnNovo
             // 
-            this.btnExcluir.Location = new System.Drawing.Point(638, 49);
-            this.btnExcluir.Name = "btnExcluir";
-            this.btnExcluir.Size = new System.Drawing.Size(130, 23);
-            this.btnExcluir.TabIndex = 21;
-            this.btnExcluir.Text = "Excluir";
-            this.btnExcluir.UseVisualStyleBackColor = true;
-            this.btnExcluir.Click += new System.EventHandler(this.btnExcluir_Click);
+            this.btnNovo.Location = new System.Drawing.Point(638, 3);
+            this.btnNovo.Name = "btnNovo";
+            this.btnNovo.Size = new System.Drawing.Size(130, 23);
+            this.btnNovo.TabIndex = 22;
+            this.btnNovo.Text = "Novo";
+            this.btnNovo.UseVisualStyleBackColor = true;
+            this.btnNovo.Click += new System.EventHandler(this.btnNovo_Click);
+            // 
+            // tabRelatorioDespesa
+            // 
+            this.tabRelatorioDespesa.Controls.Add(this.label1);
+            this.tabRelatorioDespesa.Controls.Add(this.btnExibirRelatorioDespesa);
+            this.tabRelatorioDespesa.Controls.Add(this.dtDataFim);
+            this.tabRelatorioDespesa.Controls.Add(this.dtDataInicio);
+            this.tabRelatorioDespesa.Controls.Add(this.dgvRelatorioDespesa);
+            this.tabRelatorioDespesa.Location = new System.Drawing.Point(4, 25);
+            this.tabRelatorioDespesa.Name = "tabRelatorioDespesa";
+            this.tabRelatorioDespesa.Size = new System.Drawing.Size(776, 532);
+            this.tabRelatorioDespesa.TabIndex = 2;
+            this.tabRelatorioDespesa.Text = "Despesa Mensal - Relatório";
+            this.tabRelatorioDespesa.UseVisualStyleBackColor = true;
+            // 
+            // dgvRelatorioDespesa
+            // 
+            this.dgvRelatorioDespesa.AllowUserToAddRows = false;
+            this.dgvRelatorioDespesa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRelatorioDespesa.Location = new System.Drawing.Point(8, 62);
+            this.dgvRelatorioDespesa.Name = "dgvRelatorioDespesa";
+            this.dgvRelatorioDespesa.ReadOnly = true;
+            this.dgvRelatorioDespesa.Size = new System.Drawing.Size(760, 462);
+            this.dgvRelatorioDespesa.TabIndex = 21;
+            // 
+            // dtDataInicio
+            // 
+            this.dtDataInicio.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtDataInicio.Location = new System.Drawing.Point(8, 23);
+            this.dtDataInicio.Name = "dtDataInicio";
+            this.dtDataInicio.Size = new System.Drawing.Size(100, 20);
+            this.dtDataInicio.TabIndex = 22;
+            // 
+            // dtDataFim
+            // 
+            this.dtDataFim.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtDataFim.Location = new System.Drawing.Point(114, 23);
+            this.dtDataFim.Name = "dtDataFim";
+            this.dtDataFim.Size = new System.Drawing.Size(100, 20);
+            this.dtDataFim.TabIndex = 23;
+            // 
+            // btnExibirRelatorioDespesa
+            // 
+            this.btnExibirRelatorioDespesa.Location = new System.Drawing.Point(638, 20);
+            this.btnExibirRelatorioDespesa.Name = "btnExibirRelatorioDespesa";
+            this.btnExibirRelatorioDespesa.Size = new System.Drawing.Size(130, 23);
+            this.btnExibirRelatorioDespesa.TabIndex = 24;
+            this.btnExibirRelatorioDespesa.Text = "Exibir";
+            this.btnExibirRelatorioDespesa.UseVisualStyleBackColor = true;
+            this.btnExibirRelatorioDespesa.Click += new System.EventHandler(this.btnExibirRelatorioDespesa_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 13);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "Período";
             // 
             // frmPrincipal
             // 
@@ -322,6 +406,9 @@
             this.tabDespesaMensal.ResumeLayout(false);
             this.tabDespesaMensal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDespesaMensal)).EndInit();
+            this.tabRelatorioDespesa.ResumeLayout(false);
+            this.tabRelatorioDespesa.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRelatorioDespesa)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -352,5 +439,12 @@
         private System.Windows.Forms.Label lblTipoDespesa;
         private System.Windows.Forms.DataGridView dgvDespesaMensal;
         private System.Windows.Forms.Button btnExcluir;
+        private System.Windows.Forms.Button btnNovo;
+        private System.Windows.Forms.TabPage tabRelatorioDespesa;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnExibirRelatorioDespesa;
+        private System.Windows.Forms.DateTimePicker dtDataFim;
+        private System.Windows.Forms.DateTimePicker dtDataInicio;
+        private System.Windows.Forms.DataGridView dgvRelatorioDespesa;
     }
 }

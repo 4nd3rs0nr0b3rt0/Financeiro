@@ -1,11 +1,13 @@
 ﻿using Financeiro.Helper;
-using Financeiro.Model;
+using System;
 using System.Windows.Forms;
 
 namespace Financeiro
 {
     public partial class frmPrincipal : Form
     {
+        int despesaMensalId;
+
         public frmPrincipal()
         {
             InitializeComponent();
@@ -33,17 +35,34 @@ namespace Financeiro
                 decimal valor = decimal.Parse(txtValor.Text);
                 int tipoDespesa = cbTipoDespesa.SelectedIndex;
                 int tipoPagamento = cbTipoPagamento.SelectedIndex;
-                SQLiteHelper.OpenConnection();
-                SQLiteHelper.InsertDespesaMensal(dataVencimento, descricao, valor, tipoDespesa, tipoPagamento);
-                SQLiteHelper.CloseConnection();
 
-                txtDescricao.Text = "";
-                txtValor.Text = "";
-                cbTipoDespesa.SelectedIndex = -1;
-                cbTipoPagamento.SelectedIndex = -1;
+                if (despesaMensalId > 0)
+                {
+                    SQLiteHelper.OpenConnection();
+                    SQLiteHelper.UpdateDespesaMensal(dataVencimento, descricao, valor, tipoDespesa, tipoPagamento, despesaMensalId);
+                    SQLiteHelper.CloseConnection();
+                }
+                else
+                {
+                    SQLiteHelper.OpenConnection();
+                    SQLiteHelper.InsertDespesaMensal(dataVencimento, descricao, valor, tipoDespesa, tipoPagamento);
+                    SQLiteHelper.CloseConnection();
+                }
+
+                LimpaCamposDespesaMensal();
 
                 PreencheGridDespesaMensal();
             }
+        }
+
+        private void LimpaCamposDespesaMensal()
+        {
+            despesaMensalId = 0;
+            dtDataVencimento.Value = DateTime.Now;
+            txtDescricao.Text = "";
+            txtValor.Text = "";
+            cbTipoDespesa.SelectedIndex = -1;
+            cbTipoPagamento.SelectedIndex = -1;
         }
 
         private void btnLancar_Click(object sender, System.EventArgs e)
@@ -72,6 +91,7 @@ namespace Financeiro
         {
             SQLiteHelper.OpenConnection();
             dgvRendaDiaria.DataSource = SQLiteHelper.SelectRendaDiaria();
+            dgvRendaDiaria.Columns[0].ReadOnly = true;
             SQLiteHelper.CloseConnection();
         }
 
@@ -79,25 +99,58 @@ namespace Financeiro
         {
             SQLiteHelper.OpenConnection();
             dgvDespesaMensal.DataSource = SQLiteHelper.SelectDespesaMensal();
+            dgvDespesaMensal.Columns[0].ReadOnly = true;
             SQLiteHelper.CloseConnection();
         }
 
         private void btnExcluir_Click(object sender, System.EventArgs e)
         {
-            if (dgvDespesaMensal.SelectedRows.Count == 1)
+            if (despesaMensalId > 0)
             {
                 SQLiteHelper.OpenConnection();
-                var row = dgvDespesaMensal.SelectedRows[0].DataBoundItem as DespesaMensal;
-                string dataVencimento = row.DataVencimento.ToString("yyyyMMdd");
-                string descricao = row.Descricao;
-                decimal valor = row.Valor;
-                int tipoDespesa = row.TipoDespesa == "FIXA" ? 0 : 1;
-                int tipoPagamento = row.TipoPagamento == "BOLETO" ? 0 : row.TipoPagamento == "CHEQUE" ? 1 : 2;
-                SQLiteHelper.DeleteDespesaMensal(dataVencimento, descricao, valor, tipoDespesa, tipoPagamento);
+                SQLiteHelper.DeleteDespesaMensal(despesaMensalId);
                 SQLiteHelper.CloseConnection();
+
+                LimpaCamposDespesaMensal();
 
                 PreencheGridDespesaMensal();
             }
+        }
+
+        private void dgvDespesaMensal_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            despesaMensalId = int.Parse(dgvDespesaMensal.Rows[e.RowIndex].Cells[0].Value.ToString());
+            SQLiteHelper.OpenConnection();
+            var despesaMensal = SQLiteHelper.SelectDespesaMensalPorId(despesaMensalId);
+            SQLiteHelper.CloseConnection();
+
+            dtDataVencimento.Value = despesaMensal.DataVencimento;
+            txtDescricao.Text = despesaMensal.Descricao;
+            txtValor.Text = despesaMensal.Valor.ToString("");
+            cbTipoDespesa.SelectedItem = despesaMensal.TipoDespesa;
+            cbTipoPagamento.SelectedItem = despesaMensal.TipoPagamento;
+        }
+
+        private void btnNovo_Click(object sender, System.EventArgs e)
+        {
+            LimpaCamposDespesaMensal();
+        }
+
+        private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (e.TabPageIndex == 2)
+            {
+                dtDataInicio.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                dtDataFim.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                btnExibirRelatorioDespesa_Click(sender, e);
+            }
+        }
+
+        private void btnExibirRelatorioDespesa_Click(object sender, EventArgs e)
+        {
+            SQLiteHelper.OpenConnection();
+            dgvRelatorioDespesa.DataSource = SQLiteHelper.SelectRelatorioDespesaMensal(dtDataInicio.Value, dtDataFim.Value);
+            SQLiteHelper.CloseConnection();
         }
     }
 }

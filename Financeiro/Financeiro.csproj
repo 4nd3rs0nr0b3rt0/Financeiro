@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Helper\SQLiteHelper.cs" />
     <Compile Include="Model\DespesaMensal.cs" />
+    <Compile Include="Model\RelatorioDespesaMensal.cs" />
     <Compile Include="Model\RendaDiaria.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
